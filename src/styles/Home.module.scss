@@ -6,4 +6,45 @@
 
 .leftSide {
   width: 50%;
+  display: flex;
+  flex-direction: column;
+  margin-top: 10vh;
+  margin-left: 5vw;
+  height: 100vh;
+
+  h1{
+    font-size: 2rem;
+  }
+
+  .underline{
+    width: 40%;
+    height: 2px;
+    background-color: #d00404;
+    margin-bottom: 2vh;
+  }
+
+  .attendeesList {
+    max-height: 20vh;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-top: 10px;
+    
+    &::-webkit-scrollbar {
+      width: 8px;
+    }
+    
+    &::-webkit-scrollbar-track {
+      background: #f1f1f1;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+      background: #888;
+      border-radius: 4px;
+    }
+    
+    &::-webkit-scrollbar-thumb:hover {
+      background: #555;
+    }
+  }
 }

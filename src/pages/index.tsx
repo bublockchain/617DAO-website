@@ -10,6 +10,7 @@ import { contractAddresses } from '../contractConfig';
 type Meeting = {
   topic: string;
   blockStarted: bigint;
+  timestampStarted: bigint;
   attendees: unknown[];
 };
 
@@ -61,7 +62,15 @@ const Home: NextPage = () => {
       <div>
         <h2>Topic: {lastMeeting.topic}</h2>
         <p>Block Started: {lastMeeting.blockStarted.toString()}</p>
-        <p>Attendees: {Array.isArray(lastMeeting.attendees) ? lastMeeting.attendees.length : 0}</p>
+        <p>Time Started: {new Date(Number(lastMeeting.timestampStarted) * 1000).toLocaleString('en-US', { timeZone: 'America/New_York', dateStyle: 'full', timeStyle: 'long' })}</p>
+        <div>
+          <p>Attendees: {Array.isArray(lastMeeting.attendees) ? lastMeeting.attendees.length : 0}</p>
+          <div className={styles.attendeesList}>
+            {Array.isArray(lastMeeting.attendees) && lastMeeting.attendees.map((attendee: any, index: number) => (
+              <p key={index}>{attendee}</p>
+            ))}
+          </div>
+        </div>
         {isMeetingOpen === true && (
           <button onClick={handleCheckIn} disabled={isCheckInPending}>
             {isCheckInPending ? 'Checking In...' : 'Check In'}
@@ -75,7 +84,7 @@ const Home: NextPage = () => {
   return (
     <div className={styles.container}>
       <Head>
-        <title>RainbowKit App</title>
+        <title>617DAO</title>
         <meta
           content="BU Blockchain's DAO"
           name="617DAO"
@@ -85,7 +94,8 @@ const Home: NextPage = () => {
 
       <main className={styles.main}>
         <div className={styles.leftSide}>
-          {isMeetingOpen ? <h1>Meeting Details</h1> : <h1>Last Meeting</h1>}
+          {isMeetingOpen ? <h1>Meeting Details</h1> : <h1>Last Meeting </h1>}
+          <div className={styles.underline}></div>
           {renderMeetingDetails()}
         </div>
       </main>

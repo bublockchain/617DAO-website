@@ -1,4 +1,4 @@
 export const contractAddresses = {
-  DAO: '0xcc8efbD5220814d0f8fBAEf8F875dB2b102f95C0',
-  Faucet: '0x501ca3c198400951a93d6b5f9ce63b9f79e0018b',
+  DAO: '0x77dd12E525DD2b5bBf1e3f34e1413E12040Bd7a3',
+  Faucet: '0xBe422bCb58D95bBC76C0ffC4782919e779570005',
 };
