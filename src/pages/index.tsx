@@ -19,7 +19,7 @@ const Home: NextPage = () => {
     address: '0x582a7Bf7B31D90fA4D2231C1414A59389Eea7ef3',
     abi: daoABI,
     functionName: 'isMeetingOpen',
-  });
+  }) as { data: boolean | undefined, isError: boolean, isLoading: boolean };  
 
   const { data: meetings, isError: meetingsError, isLoading: meetingsLoading } = useReadContract({
     address: '0x582a7Bf7B31D90fA4D2231C1414A59389Eea7ef3',
@@ -27,7 +27,7 @@ const Home: NextPage = () => {
     functionName: 'getMeetings',
   });
 
-  const { writeContract: checkIn, isLoading: isCheckInLoading } = useWriteContract();
+  const { writeContract: checkIn, isPending: isCheckInPending } = useWriteContract();
 
   useEffect(() => {
     if (meetings && Array.isArray(meetings) && meetings.length > 0) {
@@ -61,11 +61,12 @@ const Home: NextPage = () => {
         <h2>Topic: {lastMeeting.topic}</h2>
         <p>Block Started: {lastMeeting.blockStarted.toString()}</p>
         <p>Attendees: {Array.isArray(lastMeeting.attendees) ? lastMeeting.attendees.length : 0}</p>
-        {isMeetingOpen && (
-          <button onClick={handleCheckIn} disabled={isCheckInLoading}>
-            {isCheckInLoading ? 'Checking In...' : 'Check In'}
+        {isMeetingOpen === true && (
+          <button onClick={handleCheckIn} disabled={isCheckInPending}>
+            {isCheckInPending ? 'Checking In...' : 'Check In'}
           </button>
         )}
+
       </div>
     );
   };
