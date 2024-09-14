@@ -5,6 +5,7 @@ import { useAccount } from 'wagmi';
 import { useReadContract, useWriteContract } from 'wagmi';
 import { abi as daoABI } from '../../../out/DAO.sol/DAO.json';
 import { useState, useEffect } from 'react';
+import { contractAddresses } from '../contractConfig';
 
 type Meeting = {
   topic: string;
@@ -16,13 +17,13 @@ const Home: NextPage = () => {
   const [lastMeeting, setLastMeeting] = useState<Meeting | null>(null);
 
   const { data: isMeetingOpen, isError: isMeetingOpenError, isLoading: isMeetingOpenLoading } = useReadContract({
-    address: '0x582a7Bf7B31D90fA4D2231C1414A59389Eea7ef3',
+    address: contractAddresses.DAO as `0x${string}`,
     abi: daoABI,
     functionName: 'isMeetingOpen',
   }) as { data: boolean | undefined, isError: boolean, isLoading: boolean };  
 
   const { data: meetings, isError: meetingsError, isLoading: meetingsLoading } = useReadContract({
-    address: '0x582a7Bf7B31D90fA4D2231C1414A59389Eea7ef3',
+    address: contractAddresses.DAO as `0x${string}`,
     abi: daoABI,
     functionName: 'getMeetings',
   });
@@ -37,7 +38,7 @@ const Home: NextPage = () => {
 
   const handleCheckIn = () => {
     checkIn({
-      address: '0x582a7Bf7B31D90fA4D2231C1414A59389Eea7ef3',
+      address: contractAddresses.DAO as `0x${string}`,
       abi: daoABI,
       functionName: 'checkIn',
     });

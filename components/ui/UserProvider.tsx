@@ -1,6 +1,7 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
-import { useAccount, useContractRead } from 'wagmi';
+import { useAccount, useReadContract } from 'wagmi';
 import { abi as daoABI } from '../../../out/DAO.sol/DAO.json';
+import { contractAddresses } from '../../src/contractConfig';
 
 interface UserContextType {
   isPresident: boolean;
@@ -15,15 +16,15 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [isMember, setIsMember] = useState(false);
   const { address } = useAccount();
 
-  const { data: presidentStatus } = useContractRead({
-    address: '0xxxxxxxx', // Replace with your DAO contract address
+  const { data: presidentStatus } = useReadContract({
+    address: contractAddresses.DAO as `0x${string}`, // Replace with your DAO contract address
     abi: daoABI,
     functionName: 'isPresident',
     args: [address],
   });
 
-  const { data: memberStatus } = useContractRead({
-    address: '0x582a7Bf7B31D90fA4D2231C1414A59389Eea7ef3', // Replace with your DAO contract address once off testnet
+  const { data: memberStatus } = useReadContract({
+    address: contractAddresses.DAO as `0x${string}`, // Replace with your DAO contract address once off testnet
     abi: daoABI,
     functionName: 'isMember',
     args: [address],
