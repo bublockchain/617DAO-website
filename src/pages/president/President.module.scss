@@ -1,0 +1,89 @@
+.container {
+  padding: 20px;
+}
+
+.main {
+  display: flex;
+}
+
+.leftSide {
+  width: 50vw;
+  max-width: 800px;
+  padding-right: 20px;
+  margin-top: 6vh;
+  margin-left: 5vw;
+
+  h1{
+    font-size: calc(1rem + 0.7vw);
+    margin-bottom: 2vh;
+  }
+}
+
+.dashboard {
+  border: 1px solid white;
+  border-radius: 10px;
+  padding: 20px;
+  width: 90%;
+}
+
+.sectionTitle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+
+  h2 {
+    font-size: 1.5rem;
+    margin: 0;
+  }
+}
+
+.buttonGroup {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.button {
+  background-color: #333;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+
+  &:hover {
+    background-color: #555;
+  }
+}
+
+.membersList {
+  max-height: 200px;
+  overflow-y: auto;
+  border: 1px solid #444;
+  border-radius: 5px;
+  padding: 10px;
+
+  .member {
+    margin-bottom: 5px;
+  }
+
+  .removeButton {
+    background-color: #d00404;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+}
+
+.removeButton {
+    background-color: #d00404;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+  }

@@ -5,7 +5,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { Oxygen_Mono } from "next/font/google";
 import { useUser } from "../../components/ui/UserProvider";
-import { contractAddresses } from '../../src/contractConfig';
 
 const oxygen_mono = Oxygen_Mono({
     subsets: ['latin'],
