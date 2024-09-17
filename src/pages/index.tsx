@@ -7,16 +7,18 @@ import { abi as daoABI } from '../../../out/DAO.sol/DAO.json';
 import { useState, useEffect } from 'react';
 import { contractAddresses } from '../contractConfig';
 import Link from 'next/link';
+import { useUser } from "../../components/ui/UserProvider";
 
 type Meeting = {
   topic: string;
   blockStarted: bigint;
   timestampStarted: bigint;
-  attendees: unknown[];
+  attendees: string[];
 };
 
 type Proposal = {
   proposal: string;
+  timeCreated: bigint;
   startBlock: bigint;
   endBlock: bigint;
   votesFor: bigint;
@@ -55,7 +57,9 @@ const Home: NextPage = () => {
     functionName: 'getProposals',
   });
 
-  const { writeContract: checkIn, isPending: isCheckInPending } = useWriteContract();
+  const { writeContract, isPending: isCheckInPending } = useWriteContract();
+
+  const { isMember } = useUser();
 
   useEffect(() => {
     if (meetings && Array.isArray(meetings) && meetings.length > 0) {
@@ -72,13 +76,21 @@ const Home: NextPage = () => {
 
   const handleCheckIn = async () => {
     try {
-      await checkIn({
+      await writeContract({
         address: contractAddresses.DAO as `0x${string}`,
         abi: daoABI,
         functionName: 'checkIn',
       });
       await refetchCheckedInStatus();
       setIsUserCheckedIn(true);
+      
+      // Update the lastMeeting state to include the new attendee
+      if (lastMeeting && address) {
+        setLastMeeting(prevMeeting => prevMeeting ? {
+          ...prevMeeting,
+          attendees: [...prevMeeting.attendees, address]
+        } : null);
+      }
     } catch (error) {
       console.error("Error checking in:", error);
     }
@@ -112,11 +124,13 @@ const Home: NextPage = () => {
         </div>
         {isMeetingOpen === true && (
           <button 
-            onClick={isUserCheckedIn ? undefined : handleCheckIn} 
-            disabled={isCheckInPending || isUserCheckedIn} 
+            onClick={isMember && !isUserCheckedIn ? handleCheckIn : undefined} 
+            disabled={isCheckInPending || isUserCheckedIn || !isMember} 
             className={isUserCheckedIn ? styles.checkedInButton : styles.checkInButton}
           >
-            {isCheckInPending ? 'Checking In...' : isUserCheckedIn ? 'Checked In' : 'Check In'}
+            {isCheckInPending ? 'Checking In...' : 
+             isUserCheckedIn ? 'Checked In' : 
+             !isMember ? 'Not Member' : 'Check In'}
           </button>
         )}
 
@@ -142,6 +156,7 @@ const Home: NextPage = () => {
               <p>{proposal.proposal}</p>
               <p>Votes: {proposal.votesFor.toString()}</p>
               <p>Status: {proposal.passed ? 'Passed' : 'Open'}</p>
+              <p>Created: {new Date(Number(proposal.timeCreated) * 1000).toLocaleString('en-US', { timeZone: 'America/New_York', dateStyle: 'full', timeStyle: 'short' }).replace(/:\d{2}\s/, ' ')}</p>
             </div>
           </Link>
         ))}
