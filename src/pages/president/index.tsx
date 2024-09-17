@@ -4,6 +4,7 @@ import styles from './President.module.scss';
 import { useReadContract, useWriteContract } from 'wagmi';
 import { abi as daoABI } from '../../../../out/DAO.sol/DAO.json';
 import { contractAddresses } from '../../contractConfig';
+import { toast } from 'react-toastify';
 
 interface Member {
   memberAddress: string;
@@ -26,15 +27,15 @@ const President: React.FC = () => {
     board: '',
     member: '',
   });
-  const [activeInput, setActiveInput] = useState<string | null>(null);
+  const [showPopup, setShowPopup] = useState(false);
+  const [newMemberName, setNewMemberName] = useState('');
+  const [activeRole, setActiveRole] = useState<string | null>(null);
+  const [pendingAction, setPendingAction] = useState<string | null>(null);
+  const [pendingMeetingAction, setPendingMeetingAction] = useState<string | null>(null);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setInputFields(prev => ({ ...prev, [name]: value }));
-  };
-
-  const handleButtonClick = (field: string) => {
-    setActiveInput(field);
   };
 
   const { 
@@ -48,13 +49,32 @@ const President: React.FC = () => {
     reset 
   } = useWriteContract();
 
-  const handleEnterClick = async (action: 'add' | 'remove', role: string, address?: string) => {
-    if (action === 'add' && !inputFields[role as keyof typeof inputFields]) {
+  const handleAddClick = (role: string) => {
+    setActiveRole(role);
+    setShowPopup(true);
+  };
+
+  const handlePopupSubmit = () => {
+    const action = activeRole?.startsWith('remove_') ? 'remove' : 'add';
+    const role = activeRole?.replace('remove_', '') as 'president' | 'vp' | 'board' | 'member';
+    
+    if (action === 'add' && role === 'member') {
+      handleEnterClick('add', 'member', inputFields.member, newMemberName);
+    } else {
+      handleEnterClick(action, role, inputFields[role]);
+    }
+    
+    setShowPopup(false);
+    setNewMemberName('');
+    setInputFields(prev => ({ ...prev, [role]: '' }));
+  };
+
+  const handleEnterClick = async (action: 'add' | 'remove', role: string, address?: string, name?: string) => {
+    if (action === 'add' && !address) {
       console.log('Input field is empty');
       return;
     }
 
-    const memberAddress = address || inputFields[role as keyof typeof inputFields];
     let functionName = '';
 
     switch (role) {
@@ -72,15 +92,29 @@ const President: React.FC = () => {
         break;
     }
 
+    const pendingActionKey = `${action}_${role}`;
+    setPendingAction(pendingActionKey);
+
     try {
-      writeContract({
+      await writeContract({
         address: contractAddresses.DAO as `0x${string}`,
         abi: daoABI,
         functionName,
-        args: [memberAddress],
+        args: role === 'member' && action === 'add' ? [address, name] : [address],
       });
     } catch (error) {
       console.error("Error updating member:", error);
+      toast.error(`Error updating member: ${error instanceof Error ? error.message : 'Unknown error'}`, {
+        position: "bottom-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    } finally {
+      setPendingAction(null);
     }
   };
 
@@ -107,6 +141,8 @@ const President: React.FC = () => {
   useEffect(() => {
     if (data) {
       refetchMembers();
+      setPendingAction(null);
+      setPendingMeetingAction(null);
     }
   }, [data, refetchMembers]);
 
@@ -117,6 +153,7 @@ const President: React.FC = () => {
   }, [meetings]);
 
   const handleCreateMeeting = async () => {
+    setPendingMeetingAction('create');
     try {
       await writeContract({
         address: contractAddresses.DAO as `0x${string}`,
@@ -127,10 +164,13 @@ const President: React.FC = () => {
       refetchMeetings();
     } catch (error) {
       console.error("Error creating meeting:", error);
+    } finally {
+      setPendingMeetingAction(null);
     }
   };
 
   const handleEndMeeting = async () => {
+    setPendingMeetingAction('end');
     try {
       await writeContract({
         address: contractAddresses.DAO as `0x${string}`,
@@ -140,7 +180,13 @@ const President: React.FC = () => {
       refetchMeetings();
     } catch (error) {
       console.error("Error ending meeting:", error);
+    } finally {
+      setPendingMeetingAction(null);
     }
+  };
+
+  const handleAddMemberClick = () => {
+    setShowPopup(true);
   };
 
   return (
@@ -164,99 +210,74 @@ const President: React.FC = () => {
                   <h2>{role.charAt(0).toUpperCase() + role.slice(1)}</h2>
                 </div>
                 <div className={styles.buttonGroup}>
-                  {activeInput === `add_${role}` ? (
-                    <>
-                      <input
-                        className={styles.input}
-                        type="text"
-                        name={role}
-                        value={inputFields[role as keyof typeof inputFields]}
-                        onChange={handleInputChange}
-                        placeholder={`Enter ${role} address`}
-                        disabled={isPending}
-                      />
-                      <button 
-                        className={styles.button} 
-                        onClick={() => handleEnterClick('add', role)}
-                        disabled={isPending}
-                      >
-                        {isPending ? 'Processing...' : 'Enter'}
-                      </button>
-                    </>
-                  ) : (
-                    <button 
-                      className={styles.button} 
-                      onClick={() => handleButtonClick(`add_${role}`)}
-                      disabled={isPending}
-                    >
-                      Add
-                    </button>
-                  )}
-                  {activeInput === `remove_${role}` ? (
-                    <>
-                      <input
-                        className={styles.input}
-                        type="text"
-                        name={role}
-                        value={inputFields[role as keyof typeof inputFields]}
-                        onChange={handleInputChange}
-                        placeholder={`Enter ${role} address`}
-                        disabled={isPending}
-                      />
-                      <button 
-                        className={styles.button} 
-                        onClick={() => handleEnterClick('remove', role)}
-                        disabled={isPending}
-                      >
-                        {isPending ? 'Processing...' : 'Enter'}
-                      </button>
-                    </>
-                  ) : (
-                    <button 
-                      className={styles.removeButton} 
-                      onClick={() => handleButtonClick(`remove_${role}`)}
-                      disabled={isPending}
-                    >
-                      Remove
-                    </button>
-                  )}
-                  {isError && <p className={styles.errorMessage}>Error: {error?.message}</p>}
-                  {isSuccess && <p className={styles.successMessage}>Operation successful!</p>}
+                  <button 
+                    className={styles.button} 
+                    onClick={() => handleAddClick(role)}
+                    disabled={pendingAction === `add_${role}` || isPending}
+                  >
+                    {pendingAction === `add_${role}` || isPending ? 'Processing...' : 'Add'}
+                  </button>
+                  <button 
+                    className={styles.removeButton} 
+                    onClick={() => handleAddClick(`remove_${role}`)}
+                    disabled={pendingAction === `remove_${role}` || isPending}
+                  >
+                    {pendingAction === `remove_${role}` || isPending ? 'Processing...' : 'Remove'}
+                  </button>
                 </div>
               </div>
             ))}
 
             <div className={styles.sectionTitleMember}>
               <h2>Members</h2>
-              {activeInput === 'add_member' ? (
-                <>
+              <button 
+                className={styles.button} 
+                onClick={() => handleAddClick('member')}
+                disabled={pendingAction === 'add_member' || isPending}
+              >
+                {pendingAction === 'add_member' || isPending ? 'Processing...' : 'Add Member'}
+              </button>
+            </div>
+            {showPopup && (
+              <div className={styles.popup}>
+                <div className={styles.popupContent}>
+                  <h3>
+                    {activeRole?.startsWith('remove_')
+                      ? `Remove ${activeRole.replace('remove_', '').charAt(0).toUpperCase()}${activeRole.replace('remove_', '').slice(1)}`
+                      : `Add New ${activeRole?.charAt(0).toUpperCase() ?? ''}${activeRole?.slice(1) ?? ''}`}
+                  </h3>
                   <input
                     className={styles.input}
                     type="text"
-                    name="member"
-                    value={inputFields.member}
-                    onChange={handleInputChange}
-                    placeholder="Enter member address"
-                    disabled={isPending}
+                    value={inputFields[activeRole?.replace('remove_', '') as keyof typeof inputFields]}
+                    onChange={(e) => setInputFields(prev => ({ ...prev, [activeRole?.replace('remove_', '') as string]: e.target.value }))}
+                    placeholder={`Enter ${activeRole?.replace('remove_', '')} address`}
                   />
+                  {activeRole === 'member' && (
+                    <input
+                      className={styles.input}
+                      type="text"
+                      value={newMemberName}
+                      onChange={(e) => setNewMemberName(e.target.value)}
+                      placeholder="Enter member name"
+                    />
+                  )}
                   <button 
                     className={styles.button} 
-                    onClick={() => handleEnterClick('add', 'member')}
+                    onClick={handlePopupSubmit}
                     disabled={isPending}
                   >
-                    {isPending ? 'Processing...' : 'Enter'}
+                    {isPending ? 'Processing...' : 'Submit'}
                   </button>
-                </>
-              ) : (
-                <button 
-                  className={styles.button} 
-                  onClick={() => handleButtonClick('add_member')}
-                  disabled={isPending}
-                >
-                  Add
-                </button>
-              )}
-            </div>
+                  <button 
+                    className={styles.button} 
+                    onClick={() => setShowPopup(false)}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            )}
             {isLoading ? (
               <div>Loading members...</div>
             ) : isMembersError ? (
@@ -272,9 +293,9 @@ const President: React.FC = () => {
                       <button 
                         className={styles.removeButton} 
                         onClick={() => handleEnterClick('remove', 'member', member.memberAddress)}
-                        disabled={isPending}
+                        disabled={pendingAction === `remove_member_${member.memberAddress}` || isPending}
                       >
-                        {isPending ? 'Processing...' : 'Remove'}
+                        {pendingAction === `remove_member_${member.memberAddress}` || isPending ? 'Processing...' : 'Remove'}
                       </button>
                     </div>
                   );
@@ -292,16 +313,16 @@ const President: React.FC = () => {
             <button 
               className={`${styles.button} ${!isMeetingOpen ? styles.active : ''}`}
               onClick={handleCreateMeeting}
-              disabled={isMeetingOpen || isPending}
+              disabled={isMeetingOpen || pendingMeetingAction === 'create' || isPending}
             >
-              {isPending ? 'Processing...' : 'Create Meeting'}
+              {pendingMeetingAction === 'create' || isPending ? 'Processing...' : 'Create Meeting'}
             </button>
             <button 
               className={`${styles.button} ${isMeetingOpen ? styles.active : ''}`}
               onClick={handleEndMeeting}
-              disabled={!isMeetingOpen || isPending}
+              disabled={!isMeetingOpen || pendingMeetingAction === 'end' || isPending}
             >
-              {isPending ? 'Processing...' : 'End Meeting'}
+              {pendingMeetingAction === 'end' || isPending ? 'Processing...' : 'End Meeting'}
             </button>
           </div>
           <div className={styles.meetingDetails}>

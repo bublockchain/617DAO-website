@@ -9,6 +9,8 @@ import Navbar from '../../layout/navbar/navbar';
 import { useState } from 'react';
 import { config } from '../wagmi';
 import { UserProvider } from '../../components/ui/UserProvider';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const client = new QueryClient();
 
@@ -24,6 +26,18 @@ function MyApp({ Component, pageProps }: AppProps) {
           </RainbowKitProvider>
         </UserProvider>
       </QueryClientProvider>
+      <ToastContainer
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+      />
     </WagmiProvider>
   );
 }

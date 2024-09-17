@@ -83,3 +83,7 @@ a {
     color: #ffffff;
   }
 }
+
+.Toastify__toast--error {
+  background-color: #cc0000 !important;
+}
