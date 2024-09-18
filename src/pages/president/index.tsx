@@ -32,6 +32,8 @@ const President: React.FC = () => {
   const [activeRole, setActiveRole] = useState<string | null>(null);
   const [pendingAction, setPendingAction] = useState<string | null>(null);
   const [pendingMeetingAction, setPendingMeetingAction] = useState<string | null>(null);
+  const [showMeetingPopup, setShowMeetingPopup] = useState(false);
+  const [meetingTopic, setMeetingTopic] = useState('');
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -152,16 +154,22 @@ const President: React.FC = () => {
     }
   }, [meetings]);
 
-  const handleCreateMeeting = async () => {
+  const handleCreateMeeting = () => {
+    setShowMeetingPopup(true);
+  };
+
+  const handleMeetingPopupSubmit = async () => {
     setPendingMeetingAction('create');
     try {
       await writeContract({
         address: contractAddresses.DAO as `0x${string}`,
         abi: daoABI,
         functionName: 'newMeeting',
-        args: ["New Meeting"], // You might want to add an input for the topic
+        args: [meetingTopic],
       });
       refetchMeetings();
+      setShowMeetingPopup(false);
+      setMeetingTopic('');
     } catch (error) {
       console.error("Error creating meeting:", error);
     } finally {
@@ -308,7 +316,6 @@ const President: React.FC = () => {
         </div>
         <div className={styles.rightSide}>
           <h1>Meeting</h1>
-          <div className={styles.underline}></div>
           <div className={styles.meetingManagement}>
             <button 
               className={`${styles.button} ${!isMeetingOpen ? styles.active : ''}`}
@@ -318,7 +325,7 @@ const President: React.FC = () => {
               {pendingMeetingAction === 'create' || isPending ? 'Processing...' : 'Create Meeting'}
             </button>
             <button 
-              className={`${styles.button} ${isMeetingOpen ? styles.active : ''}`}
+              className={`${styles.button} ${styles.endMeetingButton} ${isMeetingOpen ? styles.active : ''}`}
               onClick={handleEndMeeting}
               disabled={!isMeetingOpen || pendingMeetingAction === 'end' || isPending}
             >
@@ -327,7 +334,6 @@ const President: React.FC = () => {
           </div>
           <div className={styles.meetingDetails}>
             <h2>{isMeetingOpen ? "Current Meeting Details" : "Last Meeting Details"}</h2>
-            <div className={styles.underline}></div>
             {currentMeeting && (
               <div className={styles.meetingInfo}>
                 <p>Meeting Title: {currentMeeting.topic}</p>
@@ -336,15 +342,41 @@ const President: React.FC = () => {
                 <p>Meeting Status: {currentMeeting.open ? "Open" : "Closed"}</p>
               </div>
             )}
+            {currentMeeting && (
+              <div className={styles.attendeesList}>
+                <h3>Attendees</h3>
+                <ul>
+                  {currentMeeting.attendees.map((attendee, index) => (
+                    <li key={index}>{attendee}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </div>
-          {currentMeeting && (
-            <div className={styles.attendeesList}>
-              <h3>Attendees</h3>
-              <ul>
-                {currentMeeting.attendees.map((attendee, index) => (
-                  <li key={index}>{attendee}</li>
-                ))}
-              </ul>
+          {showMeetingPopup && (
+            <div className={styles.popup}>
+              <div className={`${styles.popupContent} ${styles.meetingPopupContent}`}>
+                <h3>Create New Meeting</h3>
+                <textarea
+                  className={styles.meetingTopicInput}
+                  value={meetingTopic}
+                  onChange={(e) => setMeetingTopic(e.target.value)}
+                  placeholder="Enter meeting topic"
+                />
+                <button 
+                  className={styles.button} 
+                  onClick={handleMeetingPopupSubmit}
+                  disabled={isPending}
+                >
+                  {isPending ? 'Processing...' : 'Create Meeting'}
+                </button>
+                <button 
+                  className={styles.button} 
+                  onClick={() => setShowMeetingPopup(false)}
+                >
+                  Cancel
+                </button>
+              </div>
             </div>
           )}
         </div>
@@ -354,8 +386,3 @@ const President: React.FC = () => {
 };
 
 export default President;
-
-// TODO: Fix loading states
-// TODO: fix formatting of add button next to member
-// TODO: fix address size in member list
-// TODO: need to check if I can remove last member with test cases

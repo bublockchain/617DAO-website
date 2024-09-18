@@ -70,7 +70,10 @@ const Home: NextPage = () => {
       console.log("Checked in status:", checkedInStatus);
     }
     if (proposalsData && Array.isArray(proposalsData)) {
-      setProposals(proposalsData as Proposal[]);
+      const oneMonthAgo = Date.now() - 30 * 24 * 60 * 60 * 1000; // 30 days in milliseconds
+      setProposals(proposalsData.filter(proposal => 
+        Number(proposal.timeCreated) * 1000 > oneMonthAgo
+      ));
     }
   }, [meetings, checkedInStatus, proposalsData]);
 

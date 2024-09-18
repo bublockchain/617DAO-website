@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Oxygen_Mono } from "next/font/google";
 import { useUser } from "../../components/ui/UserProvider";
+import { useRouter } from 'next/router';
 
 const oxygen_mono = Oxygen_Mono({
     subsets: ['latin'],
@@ -17,6 +18,7 @@ interface Props {
 
 export default function Navbar({ setopened }: Props) { 
     const { isPresident, address } = useUser();
+    const router = useRouter();
 
     return (
         <nav className={`${s.navbar} ${oxygen_mono.className}`}>
@@ -32,7 +34,7 @@ export default function Navbar({ setopened }: Props) {
 
                 </div>
                 <div className={s.links}>
-                    {isPresident && (
+                    {isPresident && router.pathname !== '/president' && (
                         <Link href="/president">
                             <div className={s.link}>
                                 President
