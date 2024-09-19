@@ -1,11 +1,10 @@
 import { useRouter } from 'next/router'
 import { useState, useEffect, useRef } from 'react'
 import { useBlockNumber, useReadContract, useWriteContract } from 'wagmi'
-import { abi as daoABI } from '../../../../../out/DAO.sol/DAO.json'
+import { abi as daoABI } from '../../../../abis/DAO.json'
 import { contractAddresses } from '../../../contractConfig'
 import styles from './Proposal.module.scss'
 import { useUser } from "../../../../components/ui/UserProvider"
-import { Button } from "../../../../components/ui/button"
 
 interface Proposal {
   proposal: string

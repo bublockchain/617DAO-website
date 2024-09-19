@@ -1,6 +1,6 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import { useAccount, useReadContract } from 'wagmi';
-import { abi as daoABI } from '../../../out/DAO.sol/DAO.json';
+import { abi as daoABI } from '../../abis/DAO.json';
 import { contractAddresses } from '../../src/contractConfig';
 
 interface UserContextType {

@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
 import styles from './President.module.scss';
 import { useReadContract, useWriteContract } from 'wagmi';
-import { abi as daoABI } from '../../../../out/DAO.sol/DAO.json';
-import { contractAddresses } from '../../contractConfig';
+import { abi as daoABI } from '@/abis/DAO.json';
+import { contractAddresses } from '@/src/contractConfig';
 import { toast } from 'react-toastify';
-import { useUser } from "../../../components/ui/UserProvider";
+import { useUser } from "@/components/ui/UserProvider";
 
 interface Member {
   memberAddress: string;
