@@ -92,13 +92,20 @@
     margin-bottom: 2vh;
   }
 
+  .proposalsContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 90%;
+  }
+
   .proposalsList {
-    max-height: 60vh;
+    max-height: 50vh; // Reduced to make room for the button
+    width: 100%;
     overflow-y: auto;
     border: 1px solid #ccc;
     padding: 10px;
     margin-top: 10px;
-    width: 90%;
     border-radius: 10px;
     
     &::-webkit-scrollbar {
@@ -134,4 +141,79 @@
       margin: 0.25rem 0;
     }
   }
+
+  .addProposalButton {
+    margin-top: 1rem;
+    align-self: flex-start;
+  }
+}
+
+.popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.popupContent {
+  background-color: black;
+  border: 1px solid white;
+  padding: 2rem;
+  border-radius: 8px;
+  width: 300px;
+  color: white;
+
+  h3 {
+    margin-bottom: 1rem;
+  }
+}
+
+.proposalInput {
+  width: 100%;
+  height: 100px;
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+  background-color: #ffffff;
+  color: black;
+  border: 1px solid #555;
+  border-radius: 4px;
+  resize: vertical;
+
+  &::placeholder {
+    color: grey;
+  }
+}
+
+.button {
+  background-color: white;
+  color: black;
+  border: none;
+  padding: 8px 16px;
+  margin-right: 0.5rem;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s, opacity 0.3s;
+  font-size: 14px;
+
+  &:hover {
+    background-color: #f0f0f0;
+  }
+
+  &:disabled {
+    background-color: #333;
+    color: #666;
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.addProposalButton {
+  @extend .button;
+  margin-top: 20px;
 }

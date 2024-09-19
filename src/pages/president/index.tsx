@@ -5,6 +5,7 @@ import { useReadContract, useWriteContract } from 'wagmi';
 import { abi as daoABI } from '../../../../out/DAO.sol/DAO.json';
 import { contractAddresses } from '../../contractConfig';
 import { toast } from 'react-toastify';
+import { useUser } from "../../../components/ui/UserProvider";
 
 interface Member {
   memberAddress: string;
@@ -20,6 +21,7 @@ interface Meeting {
 }
 
 const President: React.FC = () => {
+  const { isPresident } = useUser();
   const [members, setMembers] = useState<Member[]>([]);
   const [inputFields, setInputFields] = useState({
     president: '',
@@ -94,7 +96,7 @@ const President: React.FC = () => {
         break;
     }
 
-    const pendingActionKey = `${action}_${role}`;
+    const pendingActionKey = `${action}_${role}${address ? `_${address}` : ''}`;
     setPendingAction(pendingActionKey);
 
     try {
@@ -197,6 +199,24 @@ const President: React.FC = () => {
     setShowPopup(true);
   };
 
+  if (!isPresident) {
+    return (
+      <div className={styles.container}>
+        <Head>
+          <title>Access Denied</title>
+          <meta
+            content="BU Blockchain's DAO"
+            name="617DAO"
+          />
+          <link rel="shortcut icon" href="/bub.ico" />
+        </Head>
+        <main className={styles.main}>
+          <h1>Access Denied</h1>
+        </main>
+      </div>
+    );
+  }
+
   return (
     <div className={styles.container}>
       <Head>
@@ -221,16 +241,16 @@ const President: React.FC = () => {
                   <button 
                     className={styles.button} 
                     onClick={() => handleAddClick(role)}
-                    disabled={pendingAction === `add_${role}` || isPending}
+                    disabled={pendingAction === `add_${role}`}
                   >
-                    {pendingAction === `add_${role}` || isPending ? 'Processing...' : 'Add'}
+                    {pendingAction === `add_${role}` ? 'Processing...' : 'Add'}
                   </button>
                   <button 
                     className={styles.removeButton} 
                     onClick={() => handleAddClick(`remove_${role}`)}
-                    disabled={pendingAction === `remove_${role}` || isPending}
+                    disabled={pendingAction === `remove_${role}`}
                   >
-                    {pendingAction === `remove_${role}` || isPending ? 'Processing...' : 'Remove'}
+                    {pendingAction === `remove_${role}` ? 'Processing...' : 'Remove'}
                   </button>
                 </div>
               </div>
@@ -241,9 +261,9 @@ const President: React.FC = () => {
               <button 
                 className={styles.button} 
                 onClick={() => handleAddClick('member')}
-                disabled={pendingAction === 'add_member' || isPending}
+                disabled={pendingAction === 'add_member'}
               >
-                {pendingAction === 'add_member' || isPending ? 'Processing...' : 'Add Member'}
+                {pendingAction === 'add_member' ? 'Processing...' : 'Add Member'}
               </button>
             </div>
             {showPopup && (
@@ -301,9 +321,9 @@ const President: React.FC = () => {
                       <button 
                         className={styles.removeButton} 
                         onClick={() => handleEnterClick('remove', 'member', member.memberAddress)}
-                        disabled={pendingAction === `remove_member_${member.memberAddress}` || isPending}
+                        disabled={pendingAction === `remove_member_${member.memberAddress}`}
                       >
-                        {pendingAction === `remove_member_${member.memberAddress}` || isPending ? 'Processing...' : 'Remove'}
+                        {pendingAction === `remove_member_${member.memberAddress}` ? 'Processing...' : 'Remove'}
                       </button>
                     </div>
                   );
@@ -320,16 +340,16 @@ const President: React.FC = () => {
             <button 
               className={`${styles.button} ${!isMeetingOpen ? styles.active : ''}`}
               onClick={handleCreateMeeting}
-              disabled={isMeetingOpen || pendingMeetingAction === 'create' || isPending}
+              disabled={isMeetingOpen || pendingMeetingAction === 'create'}
             >
-              {pendingMeetingAction === 'create' || isPending ? 'Processing...' : 'Create Meeting'}
+              {pendingMeetingAction === 'create' ? 'Processing...' : 'Create Meeting'}
             </button>
             <button 
               className={`${styles.button} ${styles.endMeetingButton} ${isMeetingOpen ? styles.active : ''}`}
               onClick={handleEndMeeting}
-              disabled={!isMeetingOpen || pendingMeetingAction === 'end' || isPending}
+              disabled={!isMeetingOpen || pendingMeetingAction === 'end'}
             >
-              {pendingMeetingAction === 'end' || isPending ? 'Processing...' : 'End Meeting'}
+              {pendingMeetingAction === 'end' ? 'Processing...' : 'End Meeting'}
             </button>
           </div>
           <div className={styles.meetingDetails}>

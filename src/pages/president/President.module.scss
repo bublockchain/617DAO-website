@@ -67,7 +67,7 @@
   padding: 8px 16px;
   border-radius: 10px;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: background-color 0.3s, opacity 0.3s;
   border: none;
   font-size: 14px;
 }
@@ -78,6 +78,13 @@
 
   &:hover {
     background-color: #f0f0f0;
+  }
+
+  &:disabled {
+    background-color: #333;
+    color: #666;
+    opacity: 0.5;
+    cursor: not-allowed;
   }
 }
 
@@ -210,8 +217,21 @@
 .meetingManagement {
   margin-bottom: 20px;
 
-  button{
+  button {
     margin-right: 1vw;
+  }
+
+  .button:not(.endMeetingButton) {
+    &.active {
+      background-color: #ffffff;
+      color: black;
+    }
+
+    &:disabled {
+      background-color: #333;
+      color: #666;
+      opacity: 0.5;
+    }
   }
 }
 
@@ -250,7 +270,7 @@
 }
 
 .attendeesList {
-  max-height: 10vh;
+  max-height: 20vh;
   overflow-y: auto;
   border: 1px solid #ffffff;
   border-radius: 5px;

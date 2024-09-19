@@ -9,6 +9,7 @@ import { contractAddresses } from '../contractConfig';
 import Link from 'next/link';
 import { useUser } from "../../components/ui/UserProvider";
 
+
 type Meeting = {
   topic: string;
   blockStarted: bigint;
@@ -31,6 +32,9 @@ const Home: NextPage = () => {
   const [isUserCheckedIn, setIsUserCheckedIn] = useState(false);
   const [proposals, setProposals] = useState<Proposal[]>([]);
   const { address } = useAccount();
+  const [newProposal, setNewProposal] = useState('');
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isProposalDialogOpen, setIsProposalDialogOpen] = useState(false);
 
   const { data: checkedInStatus, refetch: refetchCheckedInStatus } = useReadContract({
     address: contractAddresses.DAO as `0x${string}`,
@@ -99,6 +103,25 @@ const Home: NextPage = () => {
     }
   };
 
+  const handleNewProposal = async () => {
+    if (!newProposal.trim()) return;
+
+    try {
+      await writeContract({
+        address: contractAddresses.DAO as `0x${string}`,
+        abi: daoABI,
+        functionName: 'newProposal',
+        args: [newProposal],
+      });
+      setNewProposal('');
+      setIsProposalDialogOpen(false);
+      // You might want to add a toast notification here
+    } catch (error) {
+      console.error("Error creating new proposal:", error);
+      // You might want to add an error toast notification here
+    }
+  };
+
   const renderMeetingDetails = () => {
     if (meetingsLoading || isMeetingOpenLoading) {
       return <div>Loading...</div>;
@@ -151,18 +174,55 @@ const Home: NextPage = () => {
     }
 
     return (
-      <div className={styles.proposalsList}>
-        {proposals.map((proposal, index) => (
-          <Link href={`/proposal/${proposal.index.toString()}`} key={index}>
-            <div className={`${styles.proposalItem} ${styles.proposalButton}`}>
-              <h3>Proposal {proposal.index.toString()}</h3>
-              <p>{proposal.proposal}</p>
-              <p>Votes: {proposal.votesFor.toString()}</p>
-              <p>Status: {proposal.passed ? 'Passed' : 'Open'}</p>
-              <p>Created: {new Date(Number(proposal.timeCreated) * 1000).toLocaleString('en-US', { timeZone: 'America/New_York', dateStyle: 'full', timeStyle: 'short' }).replace(/:\d{2}\s/, ' ')}</p>
+      <div className={styles.proposalsContainer}>
+        <div className={styles.proposalsList}>
+          {proposals.length === 0 ? (
+            <div className={styles.noProposals}>No proposals found</div>
+          ) : (
+            proposals.map((proposal, index) => (
+              <Link href={`/proposal/${proposal.index.toString()}`} key={index}>
+                <div className={`${styles.proposalItem} ${styles.proposalButton}`}>
+                  <h3>Proposal {proposal.index.toString()}</h3>
+                  <p>{proposal.proposal}</p>
+                  <p>Votes: {proposal.votesFor.toString()}</p>
+                  <p>Status: {proposal.passed ? 'Passed' : 'Open'}</p>
+                  <p>Created: {new Date(Number(proposal.timeCreated) * 1000).toLocaleString('en-US', { timeZone: 'America/New_York', dateStyle: 'full', timeStyle: 'short' }).replace(/:\d{2}\s/, ' ')}</p>
+                </div>
+              </Link>
+            ))
+          )}
+        </div>
+        <button 
+          className={styles.addProposalButton}
+          onClick={() => setIsProposalDialogOpen(true)}
+        >
+          Add Proposal
+        </button>
+        {isProposalDialogOpen && (
+          <div className={styles.popup}>
+            <div className={styles.popupContent}>
+              <h3>Add New Proposal</h3>
+              <textarea
+                className={styles.proposalInput}
+                value={newProposal}
+                onChange={(e) => setNewProposal(e.target.value)}
+                placeholder="Enter your proposal here"
+              />
+              <button 
+                className={styles.button} 
+                onClick={handleNewProposal}
+              >
+                Submit
+              </button>
+              <button 
+                className={styles.button} 
+                onClick={() => setIsProposalDialogOpen(false)}
+              >
+                Cancel
+              </button>
             </div>
-          </Link>
-        ))}
+          </div>
+        )}
       </div>
     );
   };

@@ -14,6 +14,19 @@
   font-size: 2.5rem;
   color: #ffffff;
   margin-bottom: 2rem;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+  max-height: 200px; // Adjust this value as needed
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3; // Show 3 lines before truncating
+  -webkit-box-orient: vertical;
+}
+
+.proposalDescriptionLong {
+  font-size: 2rem; // Smaller font size for long descriptions
 }
 
 .proposalInfo {
@@ -73,5 +86,9 @@
 
   .proposalDescription {
     font-size: 2rem;
+  }
+
+  .proposalDescriptionLong {
+    font-size: 1.5rem;
   }
 }

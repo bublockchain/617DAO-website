@@ -152,3 +152,7 @@ const ProposalPage: React.FC = () => {
 }
 
 export default ProposalPage
+
+// TODO: Add create proposal button and popup
+// TODO: fix toast errors on president page
+// TODO: Make check in page
