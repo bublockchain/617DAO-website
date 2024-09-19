@@ -1,6 +1,6 @@
 import type { NextPage } from 'next';
 import Head from 'next/head';
-import styles from '@/styles/Home.module.scss';
+import styles from '@/src/styles/Home.module.scss';
 import { useAccount } from 'wagmi';
 import { useReadContract, useWriteContract } from 'wagmi';
 import { abi as daoABI } from '@/abis/DAO.json';
