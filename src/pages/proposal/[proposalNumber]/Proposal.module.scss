@@ -1,7 +1,8 @@
 .proposalContainer {
   max-width: 800px;
-  margin: 2rem auto;
-  padding: 2rem;
+  margin: 0 auto;
+  padding: 4rem 2rem 2rem; // Increased top padding to accommodate the back link
+  position: relative;
 }
 
 .proposalTitle {
@@ -78,10 +79,36 @@
   font-size: 1rem;
 }
 
+.backLink {
+  position: absolute;
+  top: 1rem; // This will position it below the navbar
+  left: 2rem;
+  color: #ffffff;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  font-size: 1rem;
+  transition: color 0.3s ease;
+
+  &:hover {
+    color: #cccccc;
+  }
+}
+
+.backArrow {
+  font-size: 1.5rem;
+  margin-right: 0.5rem;
+}
+
 @media screen and (max-width: 870px) {
   .proposalContainer {
-    margin: 1rem;
-    padding: 1rem;
+    margin: 0;
+    padding: 3rem 1rem 1rem; // Adjusted padding for mobile
+  }
+
+  .backLink {
+    top: 0.75rem; // Slightly reduced top position for mobile
+    left: 1rem;
   }
 
   .proposalDescription {

@@ -21,7 +21,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       <QueryClientProvider client={client}>
         <UserProvider>
           <RainbowKitProvider modalSize="compact" theme={darkTheme({accentColor: '#d00404',})}>
-            <Navbar setopened={setOpened}/>
+            <Navbar/>
             <Component {...pageProps} />
           </RainbowKitProvider>
         </UserProvider>

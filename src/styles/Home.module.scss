@@ -1,36 +1,92 @@
 .main {
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
+  flex-direction: column;
+  font-size: 1rem;
+
+  button{
+    font-size: 1rem;
+  }
+}
+
+.page {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: 5vh 5vw;
 }
 
 .leftSide {
-  width: 50%;
+  @extend .page;
+  width: 100%; 
   display: flex;
   flex-direction: column;
-  margin-top: 10vh;
-  margin-left: 5vw;
-  height: 100vh;
+  margin-top: 5vh;
+  height: 80vh;
 
-  h1{
+  h1 {
     font-size: calc(1rem + 0.7vw);
   }
 
-  .underline{
-    width: 50%;
+  .underline {
+    width: 30vw;
     height: 2px;
     background-color: #d00404;
     margin-bottom: 2vh;
   }
 
+  .meetingContainer {
+    display: flex;
+    justify-content: space-between;
+    height: 80vh;
+    margin: 0 5%; 
+  }
+
+  .meetingDetails {
+    width: 70%; 
+    h1 {
+      font-size: calc(2.5rem + 0.5vw); // Reduced from 3rem to 2.5rem
+      margin-bottom: 1.5rem;
+    }
+
+    h2 {
+      font-size: calc(1.5rem + 0.3vw); // Reduced from 1.7rem to 1.5rem
+      margin-bottom: 1.5rem;
+    }
+
+    p {
+      font-size: calc(0.9rem + 0.3vw); // Reduced from 1rem to 0.9rem
+      margin-bottom: 1rem;
+    }
+
+    .link{
+      color: #d00404;
+      text-decoration: underline;
+    }
+  }
+
+  .attendeesSection {
+    width: 30%; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100vh;
+  }
+
   .attendeesList {
-    max-height: 20vh;
+    width: 100%; 
+    height: 50vh; 
+    max-height: calc(100% - 60px); // Added max-height
     overflow-y: auto;
     border: 1px solid #ccc;
     padding: 10px;
-    margin-top: 10px;
-    width: 70%;
-    border-radius: 10px;
+    border-radius: 0.6rem;
+    margin-bottom: 1rem;
+    
+    h3 {
+      margin-top: 0;
+      margin-bottom: 1rem;
+    }
     
     &::-webkit-scrollbar {
       width: 5px;
@@ -43,177 +99,303 @@
     
     &::-webkit-scrollbar-thumb {
       background: #ffffff;
-      border-radius: 4px;
+      border-radius: 0.6rem;
     }
     
     &::-webkit-scrollbar-thumb:hover {
       background: #555;
     }
-    
   }
 
-  .checkInButton{
+  .checkInButton, .checkedInButton {
+    width: 100%;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 0.6rem;
+    text-align: center;
+  }
+
+  .checkInButton {
     background-color: #000000;
     color: #ffffff;
     border: 1px solid #ffffff;
-    padding: 10px;
-    margin-top: 10px;
-    cursor: pointer;
-    border-radius: 10px;
   }
 
-  .checkedInButton{
+  .checkedInButton {
     background-color: #000000;
     color: #d00404;
     border: 1px solid #d00404;
-    padding: 10px;
-    margin-top: 10px;
-    cursor: pointer;
-    border-radius: 10px;
   }
 }
 
-.rightSide {
-  width: 50%;
+.stickyHeader {
+  position: sticky;
+  top: 0;
+  background-color: #000000;
+  z-index: 10;
+  padding-bottom: 2vh;
+}
+
+.proposalsWrapper {
+  flex-grow: 1;
+  padding-top: 2vh;
+}
+
+.proposalsSection {
+  margin-top: 0; // Remove top margin as it's now part of the scrollable content
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.proposalsControls {
   display: flex;
-  flex-direction: column;
-  margin-top: 10vh;
-  margin-right: 5vw;
-  height: 100vh;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2vh;
+}
 
-  h1 {
-    font-size: calc(1rem + 0.7vw);
-  }
+.newProposalButton {
+  padding: 0.5rem 1rem;
+  background-color: #000000;
+  color: #ffffff;
+  border: 1px solid #ffffff;
+  border-radius: 0.6rem; // Changed from 0.3rem
+  cursor: pointer;
 
-  .underline {
-    width: 40%;
-    height: 2px;
-    background-color: #d00404;
-    margin-bottom: 2vh;
-  }
-
-  .proposalsContainer {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    width: 90%;
-  }
-
-  .proposalsList {
-    max-height: 50vh; // Reduced to make room for the button
-    width: 100%;
-    overflow-y: auto;
-    border: 1px solid #ccc;
-    padding: 10px;
-    margin-top: 10px;
-    border-radius: 10px;
-    
-    &::-webkit-scrollbar {
-      width: 5px;
-    }
-    
-    &::-webkit-scrollbar-track {
-      background: #000000;
-    }
-    
-    &::-webkit-scrollbar-thumb {
-      background: #ffffff;
-      border-radius: 4px;
-    }
-    
-    &::-webkit-scrollbar-thumb:hover {
-      background: #555;
-    }
-  }
-
-  .proposalItem {
-    background-color: rgba(255, 255, 255, 0.1);
-    border-radius: 8px;
-    padding: 1rem;
-    margin-bottom: 1rem;
-
-    h3 {
-      margin-top: 0;
-      margin-bottom: 0.5rem;
-    }
-
-    p {
-      margin: 0.25rem 0;
-    }
-  }
-
-  .addProposalButton {
-    margin-top: 1rem;
-    align-self: flex-start;
+  &:hover {
+    background-color: #ffffff;
+    color: #000000;
   }
 }
 
-.popup {
+.filterControls {
+  display: flex;
+
+  select {
+    margin-left: 1rem;
+    padding: 0.5rem;
+    padding-right: 1.5rem; // Increase right padding
+    background-color: #000000;
+    color: #ffffff;
+    border: 1px solid #ffffff;
+    border-radius: 0.6rem; // Changed from 0.3rem
+    appearance: none; // This removes default styling
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 8 8'%3E%3Cpath fill='%23ffffff' d='M0 0l4 4 4-4z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.5rem center;
+  }
+}
+
+.proposalsTable {
+  width: 100%;
+}
+
+.tableHeader, .tableRow {
+  display: grid;
+  grid-template-columns: 0.5fr 2fr 1fr 1fr 0.5fr 0.5fr;
+  padding: 1rem;
+  align-items: center;
+
+  > div {
+    padding: 0 0.5rem;
+  }
+}
+
+.tableHeader {
+  font-weight: bold;
+  background-color: #ffffff;
+  color: #000000;
+}
+
+.tableRow {
+  border-bottom: 1px solid #ffffff;
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.proposalNumber {
+  color: #d00404;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.modal {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.75); // Changed opacity to 75%
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000;
 }
 
-.popupContent {
-  background-color: black;
-  border: 1px solid white;
+.modalContent {
+  background-color: #000000;
   padding: 2rem;
-  border-radius: 8px;
-  width: 300px;
-  color: white;
+  border-radius: 0.6rem;
+  width: 80%;
+  max-width: 500px;
+  border: 2px solid #ffffff; // Added white border
 
-  h3 {
+  h2 {
     margin-bottom: 1rem;
   }
-}
 
-.proposalInput {
-  width: 100%;
-  height: 100px;
-  padding: 0.5rem;
-  margin-bottom: 1rem;
-  background-color: #ffffff;
-  color: black;
-  border: 1px solid #555;
-  border-radius: 4px;
-  resize: vertical;
-
-  &::placeholder {
-    color: grey;
+  textarea {
+    width: 100%;
+    height: 100px;
+    margin-bottom: 1rem;
+    padding: 0.5rem;
+    background-color: #ffffff;
+    color: #000000;
+    border: none;
+    border-radius: 0.3rem;
   }
 }
 
-.button {
-  background-color: white;
-  color: black;
-  border: none;
-  padding: 8px 16px;
-  margin-right: 0.5rem;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: background-color 0.3s, opacity 0.3s;
-  font-size: 14px;
+.modalButtons {
+  display: flex;
+  justify-content: flex-end;
 
-  &:hover {
-    background-color: #f0f0f0;
-  }
+  button {
+    margin-left: 1rem;
+    padding: 0.5rem 1rem;
+    background-color: #ffffff;
+    color: #000000;
+    border: none;
+    border-radius: 0.6rem; // Changed from 0.3rem
+    cursor: pointer;
 
-  &:disabled {
-    background-color: #333;
-    color: #666;
-    opacity: 0.5;
-    cursor: not-allowed;
+    &:hover {
+      background-color: #d00404;
+      color: #ffffff;
+    }
   }
 }
 
-.addProposalButton {
-  @extend .button;
-  margin-top: 20px;
+@media (max-width: 800px) {
+  .leftSide {
+    height: auto;
+    margin-bottom: 14rem;
+    margin-top: 0;
+    padding: 0;
+    text-wrap: nowrap !important;
+  }
+
+  .meetingContainer {
+    flex-direction: column;
+    height: auto;
+    margin: 0;
+    width: 100%;
+  }
+
+  .meetingDetails {
+    width: 100%;
+    margin-bottom: 2rem;
+    padding: 0 5%;
+
+    .meetingTopic {
+      text-wrap: wrap;
+    }
+  }
+
+  .attendeesSection {
+    width: 100% !important;
+    height: auto;
+    padding: 0 5%;
+    padding-right: 2rem;
+  }
+
+  .attendeesList {
+    height: 40vh;
+    margin-bottom: 1rem;
+    width: 100%;
+  }
+
+  .checkInButton, .checkedInButton {
+    width: 100%;
+    height: 80px; // Doubled the height
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .proposalsSection {
+    width: 100% !important;
+    height: auto;
+    padding: 0 5%;
+    padding-left: 2.5rem;
+    padding-right: 1rem;
+  }
+
+  .proposalsControls {
+    flex-direction: column;
+    align-items: flex-start;
+
+    .newProposalButton {
+      margin-bottom: 1rem;
+      width: 100%;
+      height: 80px; // Doubled the height
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .filterControls {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+
+      select {
+        width: 48%;
+        margin-left: 0;
+      }
+
+      select:first-child {
+        margin-right: 4%;
+      }
+    }
+  }
+
+  .tableHeader, .tableRow {
+    font-size: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 0.5rem;
+
+    > div {
+      &:first-child {
+        width: auto;
+      }
+
+      &:nth-child(2) {
+        flex-grow: 1;
+        text-align: right;
+        padding-left: 1rem; 
+      }
+
+      &:nth-child(3), 
+      &:nth-child(4), 
+      &:nth-child(5), 
+      &:nth-child(6) {
+        display: none;
+      }
+    }
+  }
+  .tableHeader, .tableRow {
+    grid-template-columns: unset;
+  }
+
+  .proposalsSection {
+    margin-top: 2rem;
+  }
 }

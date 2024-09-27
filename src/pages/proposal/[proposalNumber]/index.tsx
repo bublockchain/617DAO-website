@@ -5,6 +5,8 @@ import { abi as daoABI } from '../../../../abis/DAO.json'
 import { contractAddresses } from '../../../contractConfig'
 import styles from './Proposal.module.scss'
 import { useUser } from "../../../../components/ui/UserProvider"
+import Link from 'next/link'
+import { useMediaQuery } from 'react-responsive';
 
 interface Proposal {
   proposal: string
@@ -24,6 +26,7 @@ const ProposalPage: React.FC = () => {
   const [isProposalClosed, setIsProposalClosed] = useState(false)
   const { address, isMember } = useUser()
   const { data: blockNumber } = useBlockNumber()
+  const isMobile = useMediaQuery({ maxWidth: 767 });
 
   const { data: proposalsData } = useReadContract({
     address: contractAddresses.DAO as `0x${string}`,
@@ -99,6 +102,9 @@ const ProposalPage: React.FC = () => {
 
   return (
     <div className={styles.proposalContainer}>
+      <Link href="/" className={styles.backLink}>
+        <span className={styles.backArrow}>←</span> Back
+      </Link>
       <h1 
         ref={descriptionRef}
         className={`${styles.proposalDescription} ${isDescriptionLong ? styles.proposalDescriptionLong : ''}`}
@@ -134,7 +140,9 @@ const ProposalPage: React.FC = () => {
         </div>
       </div>
       <div className={styles.voteSection}>
-        {getVoteMessage() ? (
+        {isMobile ? (
+          <p className={styles.voteMessage}>Not Available on Mobile</p>
+        ) : getVoteMessage() ? (
           <p className={styles.voteMessage}>{getVoteMessage()}</p>
         ) : (
           <button 

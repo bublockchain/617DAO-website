@@ -6,19 +6,17 @@ import Link from "next/link";
 import { Oxygen_Mono } from "next/font/google";
 import { useUser } from "../../components/ui/UserProvider";
 import { useRouter } from 'next/router';
+import { useMediaQuery } from 'react-responsive';
 
 const oxygen_mono = Oxygen_Mono({
     subsets: ['latin'],
     weight: '400'
 })
 
-interface Props {
-    setopened: (opened: boolean) => void
-}
-
-export default function Navbar({ setopened }: Props) { 
-    const { isPresident, address } = useUser();
+export default function Navbar() { 
+    const { isPresident } = useUser();
     const router = useRouter();
+    const isMobile = useMediaQuery({ maxWidth: 767 });
 
     return (
         <nav className={`${s.navbar} ${oxygen_mono.className}`}>
@@ -41,7 +39,9 @@ export default function Navbar({ setopened }: Props) {
                             </div>
                         </Link>
                     )}
-                    <ConnectButton accountStatus="address" chainStatus="none" showBalance={false}/>
+                    {!isMobile && (
+                        <ConnectButton accountStatus="address" chainStatus="none" showBalance={false}/>
+                    )}
                 </div>
             </div>
         </nav>
