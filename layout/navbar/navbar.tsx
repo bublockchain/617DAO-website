@@ -14,7 +14,7 @@ const oxygen_mono = Oxygen_Mono({
 })
 
 export default function Navbar() { 
-    const { isPresident } = useUser();
+    const { isPresident, isMember, address } = useUser();
     const router = useRouter();
     const isMobile = useMediaQuery({ maxWidth: 767 });
 
@@ -39,8 +39,15 @@ export default function Navbar() {
                             </div>
                         </Link>
                     )}
+                    {isMember && address && (
+                        <Link href="/profile">
+                            <div className={s.link}>
+                                Profile
+                            </div>
+                        </Link>
+                    )}
                     {!isMobile && (
-                        <ConnectButton accountStatus="address" chainStatus="none" showBalance={false}/>
+                        <ConnectButton accountStatus="address" chainStatus="icon" showBalance={false}/>
                     )}
                 </div>
             </div>

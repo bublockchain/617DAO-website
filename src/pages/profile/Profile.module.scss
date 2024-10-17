@@ -1,0 +1,98 @@
+.container {
+  padding: 20px;
+  width: 100vw;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.main {
+  display: flex;
+  flex: 1;
+}
+
+.leftSide {
+  width: 50vw;
+  padding-right: 20px;
+  margin-top: 6vh;
+  margin-left: 5vw;
+
+  h1 {
+    font-size: calc(1rem + 0.7vw);
+    margin-bottom: 2vh;
+  }
+}
+
+.profileInfo {
+  background-color: #000000;
+  color: #ffffff;
+  text-overflow: wrap;
+
+  p {
+    font-size: calc(0.9rem + 0.3vw);
+    margin-bottom: 1rem;
+  }
+}
+
+.rightSide {
+  width: 50vw;
+  padding-left: 10%;
+  margin-top: 6vh;
+  margin-right: 5vw;
+
+  h1 {
+    font-size: calc(1rem + 0.7vw);
+    margin-bottom: 2vh;
+  }
+}
+
+.fundButton {
+  width: 50%;
+  padding: 8px 16px;
+  cursor: pointer;
+  border-radius: 10px;
+  text-align: center;
+  background-color: #d00404;
+  color: white;
+  border: none;
+  font-size: 14px;
+  transition: background-color 0.3s, opacity 0.3s;
+
+  &:hover {
+    background-color: #ff0000;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.successMessage {
+  margin-top: 1rem;
+  color: #4caf50;
+  font-size: calc(0.9rem + 0.3vw);
+}
+
+@media (max-width: 800px) {
+  .main {
+    flex-direction: column;
+  }
+
+  .leftSide, .rightSide {
+    width: 100%;
+    padding: 0;
+    margin: 0;
+  }
+
+  .rightSide {
+    margin-top: 20px;
+  }
+
+  .fundButton {
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}

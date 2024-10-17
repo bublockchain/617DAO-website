@@ -164,7 +164,7 @@ const Home: NextPage = () => {
           <div className={styles.underline}></div>
           <h2 className={styles.meetingTopic}>{lastMeeting.topic}</h2>
           <p>{new Date(Number(lastMeeting.timestampStarted) * 1000).toLocaleString('en-US', { timeZone: 'America/New_York', dateStyle: 'full', timeStyle: 'short' }).replace(/:\d{2}\s/, ' ')}</p>
-          <p>Block Started: <Link className={styles.link} href={`https://amoy.polygonscan.com/block/${lastMeeting.blockStarted.toString()}`} target="_blank">{lastMeeting.blockStarted.toString()}</Link></p>
+          <p>Block Started: <Link className={styles.link} href={`https://polygonscan.com/block/${lastMeeting.blockStarted.toString()}`} target="_blank">{lastMeeting.blockStarted.toString()}</Link></p>
         </div>
         <div className={styles.attendeesSection}>
           <div className={styles.attendeesList}>

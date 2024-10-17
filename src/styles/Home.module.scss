@@ -22,7 +22,8 @@
   display: flex;
   flex-direction: column;
   margin-top: 5vh;
-  height: 80vh;
+  height: auto; // Change from 80vh to auto
+  margin-bottom: 2rem; // Add margin-bottom to create some space
 
   h1 {
     font-size: calc(1rem + 0.7vw);
@@ -38,7 +39,7 @@
   .meetingContainer {
     display: flex;
     justify-content: space-between;
-    height: 80vh;
+    height: auto; // Change from 80vh to auto
     margin: 0 5%; 
   }
 
@@ -70,13 +71,13 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    height: 100vh;
+    height: auto; // Change from 100vh to auto
   }
 
   .attendeesList {
     width: 100%; 
     height: 50vh; 
-    max-height: calc(100% - 60px); // Added max-height
+    max-height: 50vh; // Set a max-height
     overflow-y: auto;
     border: 1px solid #ccc;
     padding: 10px;
@@ -142,7 +143,7 @@
 }
 
 .proposalsSection {
-  margin-top: 0; // Remove top margin as it's now part of the scrollable content
+  margin-top: 2rem; // Add some top margin to separate from the meeting section
   width: 90%;
   margin-left: auto;
   margin-right: auto;
@@ -243,7 +244,7 @@
   border-radius: 0.6rem;
   width: 80%;
   max-width: 500px;
-  border: 2px solid #ffffff; // Added white border
+  border: 2px solid #ffffff;
 
   h2 {
     margin-bottom: 1rem;
@@ -322,7 +323,7 @@
 
   .checkInButton, .checkedInButton {
     width: 100%;
-    height: 80px; // Doubled the height
+    height: 80px; 
     display: flex;
     align-items: center;
     justify-content: center;
@@ -343,7 +344,7 @@
     .newProposalButton {
       margin-bottom: 1rem;
       width: 100%;
-      height: 80px; // Doubled the height
+      height: 80px; 
       display: flex;
       align-items: center;
       justify-content: center;
@@ -391,6 +392,7 @@
       }
     }
   }
+
   .tableHeader, .tableRow {
     grid-template-columns: unset;
   }
